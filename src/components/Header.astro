@@ -1,0 +1,40 @@
+---
+import { SITE_TITLE, sitePath } from '../consts';
+import HeaderLink from './HeaderLink.astro';
+---
+
+<header>
+	<nav aria-label="주 메뉴">
+		<a class="brand" href={sitePath('/')}>{SITE_TITLE}</a>
+		<div class="links">
+			<HeaderLink href="/">홈</HeaderLink>
+			<HeaderLink href="/blog/">글</HeaderLink>
+			<HeaderLink href="/about/">소개</HeaderLink>
+		</div>
+	</nav>
+</header>
+
+<style>
+	header {
+		padding: 0 1em;
+		background: white;
+		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+	}
+	nav {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 1rem;
+		max-width: 960px;
+		margin: auto;
+	}
+	.brand {
+		color: rgb(var(--black));
+		font-weight: bold;
+		text-decoration: none;
+	}
+	.links {
+		display: flex;
+		gap: 0.25rem;
+	}
+</style>

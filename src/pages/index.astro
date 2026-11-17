@@ -1,0 +1,22 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE, sitePath } from '../consts';
+---
+
+<!doctype html>
+<html lang="ko">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>{SITE_TITLE}</h1>
+			<p>글과 작업 기록을 모으는 공간입니다.</p>
+			<a href={sitePath('/blog/')}>글 목록 보기 <span aria-hidden="true">→</span></a>
+		</main>
+		<Footer />
+	</body>
+</html>

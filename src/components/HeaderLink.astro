@@ -1,0 +1,34 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { sitePath } from '../consts';
+
+type Props = Omit<HTMLAttributes<'a'>, 'href'> & { href: `/${string}` };
+
+const { href, class: className, ...props } = Astro.props;
+const url = sitePath(href);
+const isCurrent = Astro.url.pathname.replace(/\/$/, '') === url.replace(/\/$/, '');
+const isActive = isCurrent || (href !== '/' && Astro.url.pathname.startsWith(url));
+---
+
+<a
+	href={url}
+	aria-current={isCurrent ? 'page' : undefined}
+	class:list={[className, { active: isActive }]}
+	{...props}
+>
+	<slot />
+</a>
+
+<style>
+	a {
+		display: inline-block;
+		padding: 0.75em 0.5em;
+		border-bottom: 3px solid transparent;
+		text-decoration: none;
+		color: rgb(var(--black));
+	}
+	a.active {
+		border-bottom-color: var(--accent);
+		font-weight: bold;
+	}
+</style>
