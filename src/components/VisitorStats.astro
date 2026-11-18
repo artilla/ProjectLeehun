@@ -1,0 +1,45 @@
+---
+const rawStats = process.env.VISITOR_STATS;
+const stats = rawStats ? JSON.parse(rawStats) : undefined;
+const numberFormat = new Intl.NumberFormat('ko-KR');
+const dateFormat = new Intl.DateTimeFormat('ko-KR', {
+	timeZone: 'Asia/Seoul',
+	month: 'long',
+	day: 'numeric',
+	hour: '2-digit',
+	minute: '2-digit',
+	hourCycle: 'h23',
+});
+---
+
+<div class="visitor-stats">
+	{stats ? (
+		<>
+			<p>
+				<span>오늘 방문 <strong>{numberFormat.format(stats.today)}회</strong></span>
+				<span>최근 30일 방문 <strong>{numberFormat.format(stats.last30Days)}회</strong></span>
+			</p>
+			<small>한국 시간 <time datetime={stats.asOf}>{dateFormat.format(new Date(stats.asOf))}</time> 기준</small>
+		</>
+	) : (
+		<small>방문 통계를 가져오지 못했습니다.</small>
+	)}
+</div>
+
+<style>
+	.visitor-stats {
+		flex-basis: 100%;
+		text-align: center;
+		color: rgb(var(--gray-dark));
+	}
+	p {
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: center;
+		gap: 0.25rem 1rem;
+		margin: 0;
+	}
+	strong {
+		font-variant-numeric: tabular-nums;
+	}
+</style>

@@ -3,6 +3,8 @@ name: Deploy Astro to GitHub Pages
 on:
   push:
     branches: [main]
+  schedule:
+    - cron: '17 * * * *'
   workflow_dispatch:
 
 concurrency:
@@ -26,10 +28,22 @@ jobs:
       - uses: actions/configure-pages@v6
         id: pages
       - run: npm ci
+      - name: Fetch visitor totals
+        id: visits
+        if: vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN != ''
+        continue-on-error: true
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_ANALYTICS_API_TOKEN: ${{ secrets.CLOUDFLARE_ANALYTICS_API_TOKEN }}
+        run: |
+          snapshot=$(node scripts/fetch-visits.mjs)
+          printf 'snapshot=%s\n' "$snapshot" >> "$GITHUB_OUTPUT"
       - run: npm run build
         env:
           PAGES_ORIGIN: ${{ steps.pages.outputs.origin }}
           PAGES_BASE: ${{ steps.pages.outputs.base_path }}
+          CLOUDFLARE_WEB_ANALYTICS_TOKEN: ${{ vars.CLOUDFLARE_WEB_ANALYTICS_TOKEN }}
+          VISITOR_STATS: ${{ steps.visits.outputs.snapshot }}
       - uses: actions/upload-pages-artifact@v5
         with:
           path: dist

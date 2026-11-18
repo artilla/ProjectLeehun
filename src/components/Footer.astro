@@ -1,12 +1,25 @@
 ---
 import { SITE_TITLE, sitePath } from '../consts';
+
+const beaconToken = process.env.CLOUDFLARE_WEB_ANALYTICS_TOKEN;
+const collectAnalytics = import.meta.env.PROD && Astro.site?.hostname === 'www.leehun.com' && beaconToken;
 ---
 
 <footer>
 	<span>{SITE_TITLE}</span>
 	<a href="https://github.com/artilla">GitHub</a>
 	<a href={sitePath('/rss.xml')}>RSS</a>
+	<slot />
 </footer>
+
+{collectAnalytics && (
+	<script
+		is:inline
+		type="module"
+		src="https://static.cloudflareinsights.com/beacon.min.js"
+		data-cf-beacon={JSON.stringify({ token: beaconToken })}
+	></script>
+)}
 
 <style>
 	footer {
